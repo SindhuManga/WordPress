@@ -41,7 +41,8 @@ pipeline {
       steps {
         script {
           echo '🚀 Deploying WordPress on EC2...'
-          def ip = sh(script: "jq -r .public_ip.value Terraform/tf_output.json", returnStdout: true).trim()
+          def ip = sh(script: "cd Terraform && terraform output -raw public_ip", returnStdout: true).trim()
+
 
           // save SSH key for EC2 connection
           writeFile file: 'ec2_key.pem', text: env.SSH_KEY_PSW
