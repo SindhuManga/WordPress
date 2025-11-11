@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "instance_type" {
   description = "Type of EC2 instance to create"
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "key_name" {
