@@ -42,8 +42,8 @@ pipeline {
         script {
           echo '🚀 Deploying WordPress on EC2...'
           def ip = sh(script: "cd Terraform && terraform output -raw public_ip", returnStdout: true).trim()
-
-
+       
+          echo "📡 EC2 Instance Public IP: ${ip}"
           // save SSH key for EC2 connection
           writeFile file: 'ec2_key.pem', text: env.SSH_KEY_PSW
           sh "chmod 600 ec2_key.pem"
@@ -53,6 +53,7 @@ pipeline {
 
           // start containers remotely
           sh "ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${ip} 'sudo mkdir -p /opt/wordpress && sudo mv /home/ubuntu/docker-compose.yml /opt/wordpress/docker-compose.yml && cd /opt/wordpress && sudo docker-compose pull && sudo docker-compose up -d --remove-orphans'"
+          echo " WordPress deployed successfully at: http://${ip}"
         }
       }
     }
@@ -61,7 +62,7 @@ pipeline {
   post {
     always {
       sh 'docker logout || true'
-      echo '✅ Pipeline completed!'
+      echo ' Pipeline completed!'
     }
   }
 }
