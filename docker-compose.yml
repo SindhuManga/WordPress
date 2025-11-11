@@ -10,24 +10,22 @@ services:
   # 🧠 Jenkins CI/CD Server
   # -----------------------------------------------------------------
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
-    container_name: jenkins-server
-    restart: unless-stopped
-    privileged: true
-    user: root
-    ports:
-      - "8090:8080"        # Jenkins Web UI
-      - "50000:50000"      # Jenkins agent port (optional)
-    environment:
-      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock         # Allow Jenkins to control Docker
-      - ./Terraform:/Terraform                            # Mount Terraform configs
-      - ./Jenkinsfile:/var/jenkins_home/Jenkinsfile        # Optional: Jenkinsfile for direct editing
-      - ./Dockerfile:/var/jenkins_home/Dockerfile          # Optional: your Dockerfile for build access
-    networks:
-      - devops-net
+  build:
+    context: .
+    dockerfile: Dockerfile.jenkins
+  container_name: jenkins-server
+  restart: unless-stopped
+  privileged: true
+  user: root
+  ports:
+    - "8090:8080"
+    - "50000:50000"
+  volumes:
+    - jenkins_home:/var/jenkins_home
+    - /var/run/docker.sock:/var/run/docker.sock
+  networks:
+    - devops-net
+
 
   # -----------------------------------------------------------------
   # 🐬 MySQL Database for WordPress

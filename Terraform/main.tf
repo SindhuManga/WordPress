@@ -45,7 +45,7 @@ resource "aws_instance" "wp" {
               mkdir -p /opt/wordpress
               cd /opt/wordpress
               # clone repo (replace with your repo)
-              git clone https://github.com/<your-username>/<repo>.git .
+              git clone https://github.com/SindhuManga/WordPress.git
               cd compose
               docker-compose pull || true
               docker-compose up -d
