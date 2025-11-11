@@ -76,6 +76,6 @@ data "aws_ami" "ubuntu" {
 }
 
 # ✅ Output public IP for Jenkins next stage
-output "public_ip" {
-  value = aws_instance.wp.public_ip
-}
+# output "public_ip" {
+#  value = aws_instance.wp.public_ip
+# }
