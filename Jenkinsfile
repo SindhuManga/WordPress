@@ -30,10 +30,10 @@ pipeline {
         dir('Terraform') {      // match your folder name
           echo '🏗️  Initializing and applying Terraform...'
           withEnv(["AWS_ACCESS_KEY_ID=${AWS_CREDS_USR}", "AWS_SECRET_ACCESS_KEY=${AWS_CREDS_PSW}"]) {
-            sh 'terraform init -input=false'
-            sh 'terraform apply -auto-approve -input=false'
-            sh 'terraform output -json > tf_output.json'
-          }
+    sh 'terraform init -input=false'
+    sh 'terraform apply -auto-approve -input=false'
+}
+
         }
       }
     }

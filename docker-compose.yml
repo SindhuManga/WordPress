@@ -7,25 +7,24 @@ version: '3.8'
 
 services:
   # -----------------------------------------------------------------
-  # 🧠 Jenkins CI/CD Server
+  # 🧠 Jenkins CI/CD Server (custom build with Docker + Terraform)
   # -----------------------------------------------------------------
   jenkins:
-  build:
-    context: .
-    dockerfile: Dockerfile.jenkins
-  container_name: jenkins-server
-  restart: unless-stopped
-  privileged: true
-  user: root
-  ports:
-    - "8090:8080"
-    - "50000:50000"
-  volumes:
-    - jenkins_home:/var/jenkins_home
-    - /var/run/docker.sock:/var/run/docker.sock
-  networks:
-    - devops-net
-
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: jenkins-server
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - "8090:8080"      # Jenkins Web UI
+      - "50000:50000"    # Jenkins agent port (optional)
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock   # Allow Jenkins to use Docker
+    networks:
+      - devops-net
 
   # -----------------------------------------------------------------
   # 🐬 MySQL Database for WordPress
@@ -48,13 +47,13 @@ services:
   # 🌐 WordPress CMS Application
   # -----------------------------------------------------------------
   wordpress:
-    image: sindhu2303/wordpress:latest      # Your custom image from Docker Hub
+    image: sindhu2303/wordpress:latest   # Your Docker Hub image
     container_name: wordpress-app
     restart: unless-stopped
     depends_on:
       - db
     ports:
-      - "8081:80"                           # Accessible on localhost:8081
+      - "8081:80"    # WordPress available at localhost:8081
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wp_user
@@ -66,7 +65,7 @@ services:
       - devops-net
 
 # -----------------------------------------------------------------
-# 🔐 Volumes for Persistent Data
+# 🔐 Persistent Volumes
 # -----------------------------------------------------------------
 volumes:
   jenkins_home:
@@ -74,7 +73,7 @@ volumes:
   wordpress_data:
 
 # -----------------------------------------------------------------
-# 🌐 Shared Network between Jenkins, WordPress, MySQL
+# 🌐 Shared Network
 # -----------------------------------------------------------------
 networks:
   devops-net:
